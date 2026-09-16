@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_NAME = "testy-z-ustaw-v7";
+const CACHE_NAME = "testy-z-ustaw-v8";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -20,6 +20,8 @@ const APP_FILES = [
   "./materialy-do-nauki/Ustawa o ochronie przyrody.png",
   "./materialy-do-nauki/Ustawa o ochronie zabytków.png",
   "./materialy-do-nauki/kpo-praktyka.png",
+  "./materialy-do-nauki/Kompendium_zabytki_zielen_Podlaskie_normalne-1.pdf",
+  "./materialy-do-nauki/Kompendium_zabytki_zielen_Podlaskie_ADHD-1.pdf",
   "./data/pytania_Kodeks_postepowania_administracyjnego_KPA.csv",
   "./data/pytania_Prawo_budowlane.csv",
   "./data/pytania_Prawo_budowlane_skrocone_zabytki.csv",
@@ -55,7 +57,7 @@ self.addEventListener("fetch", event => {
 
   if (request.method !== "GET" || url.origin !== self.location.origin) return;
 
-  if (request.mode === "navigate") {
+  if (request.mode === "navigate" && !url.pathname.toLowerCase().endsWith(".pdf")) {
     event.respondWith(
       fetch(request)
         .then(response => {

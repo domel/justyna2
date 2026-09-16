@@ -47,7 +47,9 @@
     { id: "kpa-praktyka", title: "KPA w praktyce", file: "materialy-do-nauki/kpo-praktyka.png" },
     { id: "ochrona-przyrody", title: "Ustawa o ochronie przyrody", file: "materialy-do-nauki/Ustawa o ochronie przyrody.png" },
     { id: "prawo-budowlane", title: "Prawo budowlane", file: "materialy-do-nauki/Prawo budowlane.png" },
-    { id: "ochrona-zabytkow", title: "Ustawa o ochronie zabytków", file: "materialy-do-nauki/Ustawa o ochronie zabytków.png" }
+    { id: "ochrona-zabytkow", title: "Ustawa o ochronie zabytków", file: "materialy-do-nauki/Ustawa o ochronie zabytków.png" },
+    { id: "kompendium-zabytki-zielen", title: "Kompendium: ochrona zabytków i zieleń (Podlaskie)", type: "pdf", file: "materialy-do-nauki/Kompendium_zabytki_zielen_Podlaskie_normalne-1.pdf" },
+    { id: "kompendium-zabytki-zielen-adhd", title: "Kompendium: ochrona zabytków i zieleń (wersja ADHD)", type: "pdf", file: "materialy-do-nauki/Kompendium_zabytki_zielen_Podlaskie_ADHD-1.pdf" }
   ]);
 
   const LETTERS = ["A", "B", "C", "D"];
@@ -467,7 +469,7 @@
     studyCopy.append(
       createElement("span", "study-entry-label", "NAUKA"),
       createElement("span", "study-entry-title", "Materiały do nauki"),
-      createElement("span", "study-entry-meta", `${STUDY_MATERIALS.length} czytelnych infografik dostępnych również offline`)
+      createElement("span", "study-entry-meta", `${STUDY_MATERIALS.length} materiałów dostępnych również offline`)
     );
     const studyArrow = createElement("span", "study-entry-arrow", "→");
     studyArrow.setAttribute("aria-hidden", "true");
@@ -532,11 +534,11 @@
     header.append(
       createElement("p", "eyebrow", "MATERIAŁY DO NAUKI"),
       createElement("h1", "study-title", "Nauka"),
-      createElement("p", "study-subtitle", "Wybierz infografikę. Otwarty materiał możesz powiększać, aby wygodnie odczytać szczegóły.")
+      createElement("p", "study-subtitle", "Wybierz infografikę lub dokument PDF.")
     );
 
     const gallery = createElement("section", "study-grid");
-    gallery.setAttribute("aria-label", "Infografiki do nauki");
+    gallery.setAttribute("aria-label", "Materiały do nauki");
     STUDY_MATERIALS.forEach((material, index) => {
       const card = createElement("button", "study-card");
       card.type = "button";
@@ -544,12 +546,16 @@
       card.setAttribute("aria-label", `Otwórz materiał: ${material.title}`);
 
       const preview = createElement("span", "study-card-preview");
-      const image = document.createElement("img");
-      image.src = material.file;
-      image.alt = "";
-      image.loading = "lazy";
-      image.decoding = "async";
-      preview.append(image);
+      if (material.type === "pdf") {
+        preview.append(createElement("span", "study-entry-icon", "PDF"));
+      } else {
+        const image = document.createElement("img");
+        image.src = material.file;
+        image.alt = "";
+        image.loading = "lazy";
+        image.decoding = "async";
+        preview.append(image);
+      }
 
       const copy = createElement("span", "study-card-copy");
       copy.append(
@@ -592,20 +598,27 @@
     header.append(
       createElement("p", "eyebrow", "NAUKA"),
       createElement("h1", "study-viewer-title", material.title),
-      createElement("p", "study-viewer-hint", "Na telefonie użyj gestu powiększania, aby odczytać drobny tekst.")
+      createElement("p", "study-viewer-hint", material.type === "pdf"
+        ? "Otwórz dokument PDF, aby przeczytać kompendium."
+        : "Na telefonie użyj gestu powiększania, aby odczytać drobny tekst.")
     );
 
-    const image = document.createElement("img");
-    image.className = "study-viewer-image";
-    image.src = material.file;
-    image.alt = `Infografika: ${material.title}`;
-    image.decoding = "async";
+    panel.append(header);
+    if (material.type !== "pdf") {
+      const image = document.createElement("img");
+      image.className = "study-viewer-image";
+      image.src = material.file;
+      image.alt = `Infografika: ${material.title}`;
+      image.decoding = "async";
+      panel.append(image);
+    }
 
-    const fullSize = createElement("a", "study-full-size-link", "Otwórz obraz w pełnym rozmiarze");
+    const fullSize = createElement("a", "study-full-size-link",
+      material.type === "pdf" ? "Otwórz dokument PDF" : "Otwórz obraz w pełnym rozmiarze");
     fullSize.href = material.file;
     fullSize.target = "_blank";
     fullSize.rel = "noopener";
-    panel.append(header, image, fullSize);
+    panel.append(fullSize);
     app.append(topBar, panel);
     window.scrollTo({ top: 0 });
   }
