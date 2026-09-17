@@ -21,7 +21,7 @@ Zainstalowana aplikacja ma własną ikonę i uruchamia się w osobnym oknie. Chr
 
 ## Materiały do nauki
 
-Sekcja „Nauka” zawiera 8 infografik i 2 kompendia PDF z katalogu `materialy-do-nauki`. Galeria i pełne wersje obrazów są dostosowane do ekranów telefonów. Kompendia otwierają się przez link „Otwórz dokument PDF”. Wszystkie materiały są zapisywane przez Service Workera i po pierwszym pełnym uruchomieniu aplikacji można je otwierać bez internetu.
+Sekcja „Nauka” zawiera 10 infografik i 2 kompendia PDF z katalogu `materialy-do-nauki`. Galeria i pełne wersje obrazów są dostosowane do ekranów telefonów. Kompendia otwierają się przez link „Otwórz dokument PDF”. Wszystkie materiały są zapisywane przez Service Workera i po pierwszym pełnym uruchomieniu aplikacji można je otwierać bez internetu.
 
 ## Uruchomienie lokalne
 
