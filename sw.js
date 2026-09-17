@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_NAME = "testy-z-ustaw-v8";
+const CACHE_NAME = "testy-z-ustaw-v9";
 const APP_FILES = [
   "./",
   "./index.html",
