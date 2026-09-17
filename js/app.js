@@ -48,8 +48,8 @@
     { id: "ochrona-przyrody", title: "Ustawa o ochronie przyrody", file: "materialy-do-nauki/Ustawa o ochronie przyrody.png" },
     { id: "prawo-budowlane", title: "Prawo budowlane", file: "materialy-do-nauki/Prawo budowlane.png" },
     { id: "ochrona-zabytkow", title: "Ustawa o ochronie zabytków", file: "materialy-do-nauki/Ustawa o ochronie zabytków.png" },
-    { id: "kompendium-zabytki-zielen", title: "Kompendium: ochrona zabytków i zieleń (Podlaskie)", type: "pdf", file: "materialy-do-nauki/Kompendium_zabytki_zielen_Podlaskie_normalne-1.pdf" },
-    { id: "kompendium-zabytki-zielen-adhd", title: "Kompendium: ochrona zabytków i zieleń (wersja ADHD)", type: "pdf", file: "materialy-do-nauki/Kompendium_zabytki_zielen_Podlaskie_ADHD-1.pdf" }
+    { id: "kompendium-zabytki-zielen", title: "Kompendium: ochrona zabytków i zieleń (Podlaskie)", type: "pdf", preview: "materialy-do-nauki/miniatury/kompendium-normalne.png", file: "materialy-do-nauki/Kompendium_zabytki_zielen_Podlaskie_normalne-1.pdf" },
+    { id: "kompendium-zabytki-zielen-adhd", title: "Kompendium: ochrona zabytków i zieleń (wersja ADHD)", type: "pdf", preview: "materialy-do-nauki/miniatury/kompendium-adhd.png", file: "materialy-do-nauki/Kompendium_zabytki_zielen_Podlaskie_ADHD-1.pdf" }
   ]);
 
   const LETTERS = ["A", "B", "C", "D"];
@@ -546,16 +546,12 @@
       card.setAttribute("aria-label", `Otwórz materiał: ${material.title}`);
 
       const preview = createElement("span", "study-card-preview");
-      if (material.type === "pdf") {
-        preview.append(createElement("span", "study-entry-icon", "PDF"));
-      } else {
-        const image = document.createElement("img");
-        image.src = material.file;
-        image.alt = "";
-        image.loading = "lazy";
-        image.decoding = "async";
-        preview.append(image);
-      }
+      const image = document.createElement("img");
+      image.src = material.preview || material.file;
+      image.alt = "";
+      image.loading = "lazy";
+      image.decoding = "async";
+      preview.append(image);
 
       const copy = createElement("span", "study-card-copy");
       copy.append(
