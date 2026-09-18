@@ -52,6 +52,7 @@
     { id: "prawo-budowlane-podlaskie", title: "Prawo budowlane (Podlaskie)", file: "materialy-do-nauki/Prawo budowlane Podlaskie.png" },
     { id: "kpa-podlaskie", title: "KPA (Podlaskie)", file: "materialy-do-nauki/KPA Podlaskie.png" },
     { id: "ochrona-przyrody-podlaskie", title: "Ochrona przyrody (Podlaskie)", file: "materialy-do-nauki/Ochrona przyrody Podlaskie.png" },
+    { id: "kazusy", title: "Kazusy rekrutacyjne (WUOZ Białystok)", type: "pdf", preview: "materialy-do-nauki/miniatury/kazusy.png", file: "materialy-do-nauki/Kazusy.pdf" },
     { id: "kompendium-zabytki-zielen", title: "Kompendium: ochrona zabytków i zieleń (Podlaskie)", type: "pdf", preview: "materialy-do-nauki/miniatury/kompendium-normalne.png", file: "materialy-do-nauki/Kompendium_zabytki_zielen_Podlaskie_normalne-1.pdf" },
     { id: "kompendium-zabytki-zielen-adhd", title: "Kompendium: ochrona zabytków i zieleń (wersja ADHD)", type: "pdf", preview: "materialy-do-nauki/miniatury/kompendium-adhd.png", file: "materialy-do-nauki/Kompendium_zabytki_zielen_Podlaskie_ADHD-1.pdf" }
   ]);

@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_NAME = "testy-z-ustaw-v14";
+const CACHE_NAME = "testy-z-ustaw-v15";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -28,6 +28,8 @@ const APP_FILES = [
   "./materialy-do-nauki/Prawo budowlane Podlaskie.png",
   "./materialy-do-nauki/KPA Podlaskie.png",
   "./materialy-do-nauki/Ochrona przyrody Podlaskie.png",
+  "./materialy-do-nauki/Kazusy.pdf",
+  "./materialy-do-nauki/miniatury/kazusy.png",
   "./data/pytania_Kodeks_postepowania_administracyjnego_KPA.csv",
   "./data/pytania_Prawo_budowlane.csv",
   "./data/pytania_Prawo_budowlane_skrocone_zabytki.csv",
