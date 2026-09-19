@@ -48,6 +48,8 @@
     { id: "ochrona-przyrody", title: "Ustawa o ochronie przyrody", file: "materialy-do-nauki/Ustawa o ochronie przyrody.png" },
     { id: "prawo-budowlane", title: "Prawo budowlane", file: "materialy-do-nauki/Prawo budowlane.png" },
     { id: "ochrona-zabytkow", title: "Ustawa o ochronie zabytków", file: "materialy-do-nauki/Ustawa o ochronie zabytków.png" },
+    { id: "zabytki-definicje", title: "Zabytki – definicje", file: "materialy-do-nauki/Zabytki Definicje.png" },
+    { id: "ewidencja-rejestr-zabytkow", title: "Ewidencja i rejestr zabytków", file: "materialy-do-nauki/Ewidencja i Rejestr Zabydkow.png" },
     { id: "ochrona-zabytkow-podlaskie", title: "Ochrona zabytków (Podlaskie)", file: "materialy-do-nauki/Ochrona zabytków Podlaskie.png" },
     { id: "prawo-budowlane-podlaskie", title: "Prawo budowlane (Podlaskie)", file: "materialy-do-nauki/Prawo budowlane Podlaskie.png" },
     { id: "kpa-podlaskie", title: "KPA (Podlaskie)", file: "materialy-do-nauki/KPA Podlaskie.png" },
