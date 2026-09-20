@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_NAME = "testy-z-ustaw-v16";
+const CACHE_NAME = "testy-z-ustaw-v17";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -32,6 +32,10 @@ const APP_FILES = [
   "./materialy-do-nauki/miniatury/kazusy.png",
   "./materialy-do-nauki/Zabytki Definicje.png",
   "./materialy-do-nauki/Ewidencja i Rejestr Zabydkow.png",
+  "./materialy-do-nauki/poradnik_wuoz_zielen-kolorowa.pdf",
+  "./materialy-do-nauki/poradnik_wuoz_zielen_czarno-biała.pdf",
+  "./materialy-do-nauki/miniatury/poradnik-zielen-kolorowa.png",
+  "./materialy-do-nauki/miniatury/poradnik-zielen-czarno-biala.png",
   "./data/pytania_Kodeks_postepowania_administracyjnego_KPA.csv",
   "./data/pytania_Prawo_budowlane.csv",
   "./data/pytania_Prawo_budowlane_skrocone_zabytki.csv",
