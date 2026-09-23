@@ -58,6 +58,8 @@ http://localhost:8000/index.html?quiz=przyroda
 
 Aplikacja korzysta z 7 zestawów CSV w katalogu `data`: KPA, ochrona przyrody, ochrona zabytków, Prawo budowlane, skrócony zestaw Prawa budowlanego dotyczący zabytków oraz rozporządzenia Dz.U. 2021 poz. 56 i poz. 81. Po dodaniu lub usunięciu plików zaktualizuj listy `QUIZZES` i `STUDY_MATERIALS` w `js/app.js` oraz `APP_FILES` w `sw.js`.
 
+Zestaw Prawa budowlanego ma 490 pytań, a skrócony zestaw dotyczący zabytków 144 pytania. Oba pliki zachowują kodowanie UTF-8 z BOM oraz kolumny `pytanie`, `odpowiedz 1`–`odpowiedz 4`, `poprawna`, `opis` w tej kolejności. Kolumna `poprawna` zawiera numer odpowiedzi od 1 do 4. Pytania opracowano na podstawie tekstu jednolitego ogłoszonego w [Dz.U. z 2026 r. poz. 524](https://eli.gov.pl/eli/DU/2026/524/ogl), z uwzględnieniem obowiązujących późniejszych zmian dotyczących ochrony zabytków oraz książki obiektu budowlanego.
+
 ## Aktualizowanie wersji offline
 
-Plik `sw.js` zapisuje pliki aplikacji, zestawy pytań i infografiki w pamięci podręcznej. Po zmianie zasobów umieszczonych w tablicy `APP_FILES` należy zwiększyć wersję w stałej `CACHE_NAME`, np. z `testy-z-ustaw-v17` na `testy-z-ustaw-v18`. Dzięki temu zainstalowane aplikacje usuną poprzedni cache i pobiorą aktualną wersję.
+Plik `sw.js` zapisuje pliki aplikacji, zestawy pytań i infografiki w pamięci podręcznej. Po zmianie zasobów umieszczonych w tablicy `APP_FILES` należy zwiększyć wersję w stałej `CACHE_NAME`, np. z `testy-z-ustaw-v18` na `testy-z-ustaw-v19`. Dzięki temu zainstalowane aplikacje usuną poprzedni cache i pobiorą aktualną wersję.
