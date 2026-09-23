@@ -583,8 +583,21 @@ a:focus-visible {
   padding: clamp(1.5rem, 5vw, 2.7rem) clamp(1.3rem, 5vw, 2.5rem) clamp(1.5rem, 5vw, 2.5rem);
 }
 
+.question-heading,
+.answers-heading,
+.explanation-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.question-heading {
+  margin-bottom: clamp(1.25rem, 3vw, 1.75rem);
+}
+
 .question-text {
-  margin: 0 0 clamp(1.5rem, 4vw, 2.15rem);
+  margin: 0;
   font-size: clamp(1.35rem, 3.5vw, 1.75rem);
   font-weight: 730;
   letter-spacing: -0.025em;
@@ -592,11 +605,18 @@ a:focus-visible {
   overflow-wrap: anywhere;
 }
 
-.speech-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.65rem;
-  margin: -0.65rem 0 1.35rem;
+.answers-heading {
+  align-items: center;
+  margin-bottom: 0.65rem;
+}
+
+.answers-title {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
 }
 
 .speech-button {
@@ -612,8 +632,13 @@ a:focus-visible {
   opacity: 0.6;
 }
 
-.explanation-block + .speech-button {
-  margin-top: 1rem;
+.explanation-heading {
+  align-items: center;
+  margin-bottom: 0.3rem;
+}
+
+.explanation-heading .feedback-label {
+  margin-bottom: 0;
 }
 
 .answers {

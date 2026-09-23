@@ -72,6 +72,7 @@
     defaultLabel: "",
     defaultTitle: "",
     defaultAriaLabel: "",
+    utterance: null,
     speaking: false
   };
   let learningProgress = loadLearningProgress();
@@ -99,18 +100,20 @@
   }
 
   function stopSpeech() {
-    if (speechState.synth) speechState.synth.cancel();
-    if (speechState.button) {
-      speechState.button.textContent = speechState.defaultLabel;
-      speechState.button.setAttribute("aria-pressed", "false");
-      speechState.button.title = speechState.defaultTitle;
-      speechState.button.setAttribute("aria-label", speechState.defaultAriaLabel);
+    const button = speechState.button;
+    if (button) {
+      button.textContent = speechState.defaultLabel;
+      button.setAttribute("aria-pressed", "false");
+      button.title = speechState.defaultTitle;
+      button.setAttribute("aria-label", speechState.defaultAriaLabel);
     }
     speechState.button = null;
     speechState.defaultLabel = "";
     speechState.defaultTitle = "";
     speechState.defaultAriaLabel = "";
+    speechState.utterance = null;
     speechState.speaking = false;
+    if (speechState.synth) speechState.synth.cancel();
   }
 
   function getPolishVoice() {
@@ -137,17 +140,22 @@
     speechState.defaultLabel = button.textContent;
     speechState.defaultTitle = button.title;
     speechState.defaultAriaLabel = button.getAttribute("aria-label") || "Czytaj";
+    speechState.utterance = utterance;
     speechState.speaking = true;
     button.textContent = "■";
     button.title = "Zatrzymaj czytanie";
     button.setAttribute("aria-label", "Zatrzymaj czytanie");
     button.setAttribute("aria-pressed", "true");
     const finish = () => {
-      if (speechState.button === button) stopSpeech();
+      if (speechState.utterance === utterance) stopSpeech();
     };
     utterance.addEventListener("end", finish);
     utterance.addEventListener("error", finish);
-    speechState.synth.speak(utterance);
+    try {
+      speechState.synth.speak(utterance);
+    } catch (_) {
+      finish();
+    }
   }
 
   function createSpeechButton(label, text) {
@@ -873,10 +881,12 @@
     const body = createElement("div", "question-body");
     const questionText = createElement("h1", "question-text", question.question);
     questionText.id = "question-text";
+    const questionHeading = createElement("div", "question-heading");
+    questionHeading.append(questionText, createSpeechButton("Czytaj pytanie", question.question));
 
-    const speechControls = createElement("div", "speech-controls");
-    speechControls.append(
-      createSpeechButton("Czytaj pytanie", question.question),
+    const answerHeading = createElement("div", "answers-heading");
+    answerHeading.append(
+      createElement("h2", "answers-title", "Odpowiedzi"),
       createSpeechButton(
         "Czytaj odpowiedzi",
         question.answers.map((answer, index) => `${LETTERS[index]}. ${answer.text}`).join(". ")
@@ -919,7 +929,7 @@
     next.addEventListener("click", nextQuestion);
     actions.append(remove, next);
 
-    body.append(questionText, speechControls, answers, feedback, actions);
+    body.append(questionHeading, answerHeading, answers, feedback, actions);
     panel.append(header, body);
     app.append(panel);
 
@@ -933,6 +943,8 @@
     const question = state.questions[state.currentQuestionIndex];
     const selected = question.answers[index];
     if (!selected) return;
+
+    stopSpeech();
 
     state.answered = true;
     state.selectedAnswerIndex = index;
@@ -996,15 +1008,16 @@
     }
 
     const explanation = createElement("div", "explanation-block");
-    explanation.append(
+    const explanationHeading = createElement("div", "explanation-heading");
+    explanationHeading.append(
       createElement("span", "feedback-label", "Wyjaśnienie"),
+      createSpeechButton("Czytaj wyjaśnienie", question.explanation || "Brak dodatkowego wyjaśnienia.")
+    );
+    explanation.append(
+      explanationHeading,
       createElement("p", "explanation-text", question.explanation || "Brak dodatkowego wyjaśnienia.")
     );
     feedback.append(explanation);
-    feedback.append(createSpeechButton(
-      "Czytaj wyjaśnienie",
-      question.explanation || "Brak dodatkowego wyjaśnienia."
-    ));
 
     const next = document.getElementById("next-button");
     next.hidden = false;
