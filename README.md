@@ -66,4 +66,4 @@ W trybie testu dostępne są przyciski odczytywania głosowego pytania, odpowied
 
 ## Aktualizowanie wersji offline
 
-Plik `sw.js` zapisuje pliki aplikacji, zestawy pytań i infografiki w pamięci podręcznej. Po zmianie zasobów umieszczonych w tablicy `APP_FILES` należy zwiększyć wersję w stałej `CACHE_NAME`, np. z `testy-z-ustaw-v19` na `testy-z-ustaw-v20`. Dzięki temu zainstalowane aplikacje usuną poprzedni cache i pobiorą aktualną wersję.
+Plik `sw.js` zapisuje pliki aplikacji, zestawy pytań i infografiki w pamięci podręcznej. Po zmianie zasobów umieszczonych w tablicy `APP_FILES` należy zwiększyć wersję w stałej `CACHE_NAME`, np. z `testy-z-ustaw-v20` na `testy-z-ustaw-v21`. Dzięki temu zainstalowane aplikacje usuną poprzedni cache i pobiorą aktualną wersję.

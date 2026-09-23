@@ -600,9 +600,10 @@ a:focus-visible {
 }
 
 .speech-button {
-  min-width: 0;
+  width: 2.75rem;
+  min-width: 2.75rem;
   min-height: 42px;
-  padding: 0.55rem 0.85rem;
+  padding: 0.55rem;
   font-size: 0.9rem;
 }
 

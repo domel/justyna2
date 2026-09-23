@@ -70,6 +70,8 @@
     synth: typeof window !== "undefined" && "speechSynthesis" in window ? window.speechSynthesis : null,
     button: null,
     defaultLabel: "",
+    defaultTitle: "",
+    defaultAriaLabel: "",
     speaking: false
   };
   let learningProgress = loadLearningProgress();
@@ -101,9 +103,13 @@
     if (speechState.button) {
       speechState.button.textContent = speechState.defaultLabel;
       speechState.button.setAttribute("aria-pressed", "false");
+      speechState.button.title = speechState.defaultTitle;
+      speechState.button.setAttribute("aria-label", speechState.defaultAriaLabel);
     }
     speechState.button = null;
     speechState.defaultLabel = "";
+    speechState.defaultTitle = "";
+    speechState.defaultAriaLabel = "";
     speechState.speaking = false;
   }
 
@@ -129,8 +135,12 @@
     if (voice) utterance.voice = voice;
     speechState.button = button;
     speechState.defaultLabel = button.textContent;
+    speechState.defaultTitle = button.title;
+    speechState.defaultAriaLabel = button.getAttribute("aria-label") || "Czytaj";
     speechState.speaking = true;
-    button.textContent = "■ Zatrzymaj czytanie";
+    button.textContent = "■";
+    button.title = "Zatrzymaj czytanie";
+    button.setAttribute("aria-label", "Zatrzymaj czytanie");
     button.setAttribute("aria-pressed", "true");
     const finish = () => {
       if (speechState.button === button) stopSpeech();
@@ -141,8 +151,10 @@
   }
 
   function createSpeechButton(label, text) {
-    const button = createElement("button", "secondary-button speech-button", `🔊 ${label}`);
+    const button = createElement("button", "secondary-button speech-button", "🔊");
     button.type = "button";
+    button.setAttribute("aria-label", label);
+    button.title = label;
     button.setAttribute("aria-pressed", "false");
     if (!speechState.synth || typeof window.SpeechSynthesisUtterance !== "function") {
       button.disabled = true;
