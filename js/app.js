@@ -66,6 +66,12 @@
   const SAVED_SESSIONS_KEY = "ustawy-saved-sessions-v1";
   const cache = new Map();
   const app = document.getElementById("app");
+  const speechState = {
+    synth: typeof window !== "undefined" && "speechSynthesis" in window ? window.speechSynthesis : null,
+    button: null,
+    defaultLabel: "",
+    speaking: false
+  };
   let learningProgress = loadLearningProgress();
   let savedSessions = loadSavedSessions();
 
@@ -90,7 +96,65 @@
     return element;
   }
 
+  function stopSpeech() {
+    if (speechState.synth) speechState.synth.cancel();
+    if (speechState.button) {
+      speechState.button.textContent = speechState.defaultLabel;
+      speechState.button.setAttribute("aria-pressed", "false");
+    }
+    speechState.button = null;
+    speechState.defaultLabel = "";
+    speechState.speaking = false;
+  }
+
+  function getPolishVoice() {
+    if (!speechState.synth) return null;
+    const voices = speechState.synth.getVoices();
+    return voices.find(voice => /^pl(?:-|$)/i.test(voice.lang)) || null;
+  }
+
+  function speakText(text, button) {
+    const Utterance = typeof window !== "undefined" ? window.SpeechSynthesisUtterance : null;
+    if (!speechState.synth || typeof Utterance !== "function" || !text) return;
+    if (speechState.button === button && speechState.speaking) {
+      stopSpeech();
+      return;
+    }
+
+    stopSpeech();
+    const utterance = new Utterance(text);
+    const voice = getPolishVoice();
+    utterance.lang = "pl-PL";
+    utterance.rate = 0.95;
+    if (voice) utterance.voice = voice;
+    speechState.button = button;
+    speechState.defaultLabel = button.textContent;
+    speechState.speaking = true;
+    button.textContent = "■ Zatrzymaj czytanie";
+    button.setAttribute("aria-pressed", "true");
+    const finish = () => {
+      if (speechState.button === button) stopSpeech();
+    };
+    utterance.addEventListener("end", finish);
+    utterance.addEventListener("error", finish);
+    speechState.synth.speak(utterance);
+  }
+
+  function createSpeechButton(label, text) {
+    const button = createElement("button", "secondary-button speech-button", `🔊 ${label}`);
+    button.type = "button";
+    button.setAttribute("aria-pressed", "false");
+    if (!speechState.synth || typeof window.SpeechSynthesisUtterance !== "function") {
+      button.disabled = true;
+      button.title = "Czytanie głosowe nie jest dostępne w tej przeglądarce.";
+    } else {
+      button.addEventListener("click", () => speakText(text, button));
+    }
+    return button;
+  }
+
   function clearApp() {
+    stopSpeech();
     app.replaceChildren();
   }
 
@@ -798,6 +862,15 @@
     const questionText = createElement("h1", "question-text", question.question);
     questionText.id = "question-text";
 
+    const speechControls = createElement("div", "speech-controls");
+    speechControls.append(
+      createSpeechButton("Czytaj pytanie", question.question),
+      createSpeechButton(
+        "Czytaj odpowiedzi",
+        question.answers.map((answer, index) => `${LETTERS[index]}. ${answer.text}`).join(". ")
+      )
+    );
+
     const answers = createElement("div", "answers");
     answers.setAttribute("role", "group");
     answers.setAttribute("aria-labelledby", "question-text");
@@ -834,7 +907,7 @@
     next.addEventListener("click", nextQuestion);
     actions.append(remove, next);
 
-    body.append(questionText, answers, feedback, actions);
+    body.append(questionText, speechControls, answers, feedback, actions);
     panel.append(header, body);
     app.append(panel);
 
@@ -916,6 +989,10 @@
       createElement("p", "explanation-text", question.explanation || "Brak dodatkowego wyjaśnienia.")
     );
     feedback.append(explanation);
+    feedback.append(createSpeechButton(
+      "Czytaj wyjaśnienie",
+      question.explanation || "Brak dodatkowego wyjaśnienia."
+    ));
 
     const next = document.getElementById("next-button");
     next.hidden = false;

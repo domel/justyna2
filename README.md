@@ -62,6 +62,8 @@ Zestaw Prawa budowlanego ma 490 pytań, a skrócony zestaw dotyczący zabytków 
 
 Zestawy dotyczące ochrony zabytków zawierają 92 pytania z ustawy, 45 pytań z rozporządzenia o rejestrze i ewidencjach oraz 59 pytań z rozporządzenia o pracach i badaniach. Zachowują ten sam format CSV. Podstawą są [ustawa o ochronie zabytków](https://eli.gov.pl/eli/DU/2024/1292/ogl) oraz teksty jednolite rozporządzeń [Dz.U. 2021 poz. 56](https://eli.gov.pl/eli/DU/2021/56/ogl) i [Dz.U. 2021 poz. 81](https://eli.gov.pl/eli/DU/2021/81/ogl). Uwzględniono również obowiązujące zmiany ustawy z [2025 r. poz. 1168](https://eli.gov.pl/eli/DU/2025/1168/ogl), [2025 r. poz. 1673](https://eli.gov.pl/eli/DU/2025/1673/ogl) i [2026 r. poz. 483](https://eli.gov.pl/eli/DU/2026/483/ogl), w tym nowe zasady zgłoszeń konserwatorskich obowiązujące od czerwca 2026 r. Stan prawny sprawdzono 23 września 2026 r.
 
+W trybie testu dostępne są przyciski odczytywania głosowego pytania, odpowiedzi i wyjaśnienia. Aplikacja wybiera polski głos dostępny w urządzeniu; materiały do nauki nie są odczytywane.
+
 ## Aktualizowanie wersji offline
 
 Plik `sw.js` zapisuje pliki aplikacji, zestawy pytań i infografiki w pamięci podręcznej. Po zmianie zasobów umieszczonych w tablicy `APP_FILES` należy zwiększyć wersję w stałej `CACHE_NAME`, np. z `testy-z-ustaw-v19` na `testy-z-ustaw-v20`. Dzięki temu zainstalowane aplikacje usuną poprzedni cache i pobiorą aktualną wersję.

@@ -592,6 +592,29 @@ a:focus-visible {
   overflow-wrap: anywhere;
 }
 
+.speech-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin: -0.65rem 0 1.35rem;
+}
+
+.speech-button {
+  min-width: 0;
+  min-height: 42px;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.9rem;
+}
+
+.speech-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.explanation-block + .speech-button {
+  margin-top: 1rem;
+}
+
 .answers {
   display: grid;
   gap: 0.8rem;
