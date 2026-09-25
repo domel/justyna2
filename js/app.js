@@ -63,6 +63,12 @@
   ]);
 
   const LETTERS = ["A", "B", "C", "D"];
+  const SPEECH_ICONS = Object.freeze({
+    question: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 9v6h3.8l4.8 3.8V5.2L6.3 9H2.5Z"/><path d="M13.5 9a4 4 0 0 1 0 6M15.5 6.5a7.5 7.5 0 0 1 0 11"/><circle cx="19" cy="16.5" r="4"/><path d="M18 15a1.2 1.2 0 1 1 2 1c-.7.5-1 .8-1 1.4M19 19.1h.01"/></svg>',
+    answers: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3.5" width="12" height="17" rx="2"/><path d="M6 8h6M6 12h6M6 16h4M18 9a4 4 0 0 1 0 6M20 6.5a7.5 7.5 0 0 1 0 11"/></svg>',
+    explanation: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 3.5h10l4 4V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3.5Z"/><path d="M15 3.5v4h4M8 12h7M8 16h5M20 10a4 4 0 0 1 0 6M22 7.5a7.5 7.5 0 0 1 0 11"/></svg>'
+  });
+  const STOP_SPEECH_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="7" y="7" width="10" height="10" rx="1.5"/></svg>';
   const LEARNING_PROGRESS_KEY = "ustawy-learning-progress-v1";
   const SAVED_SESSIONS_KEY = "ustawy-saved-sessions-v1";
   const cache = new Map();
@@ -70,7 +76,7 @@
   const speechState = {
     synth: typeof window !== "undefined" && "speechSynthesis" in window ? window.speechSynthesis : null,
     button: null,
-    defaultLabel: "",
+    defaultContent: "",
     defaultTitle: "",
     defaultAriaLabel: "",
     utterance: null,
@@ -103,13 +109,13 @@
   function stopSpeech() {
     const button = speechState.button;
     if (button) {
-      button.textContent = speechState.defaultLabel;
+      button.innerHTML = speechState.defaultContent;
       button.setAttribute("aria-pressed", "false");
       button.title = speechState.defaultTitle;
       button.setAttribute("aria-label", speechState.defaultAriaLabel);
     }
     speechState.button = null;
-    speechState.defaultLabel = "";
+    speechState.defaultContent = "";
     speechState.defaultTitle = "";
     speechState.defaultAriaLabel = "";
     speechState.utterance = null;
@@ -138,12 +144,12 @@
     utterance.rate = 0.95;
     if (voice) utterance.voice = voice;
     speechState.button = button;
-    speechState.defaultLabel = button.textContent;
+    speechState.defaultContent = button.innerHTML;
     speechState.defaultTitle = button.title;
     speechState.defaultAriaLabel = button.getAttribute("aria-label") || "Czytaj";
     speechState.utterance = utterance;
     speechState.speaking = true;
-    button.textContent = "■";
+    button.innerHTML = STOP_SPEECH_ICON;
     button.title = "Zatrzymaj czytanie";
     button.setAttribute("aria-label", "Zatrzymaj czytanie");
     button.setAttribute("aria-pressed", "true");
@@ -159,8 +165,9 @@
     }
   }
 
-  function createSpeechButton(label, text) {
-    const button = createElement("button", "secondary-button speech-button", "🔊");
+  function createSpeechButton(label, text, iconName) {
+    const button = createElement("button", `secondary-button speech-button speech-button-${iconName}`);
+    button.innerHTML = SPEECH_ICONS[iconName] || SPEECH_ICONS.question;
     button.type = "button";
     button.setAttribute("aria-label", label);
     button.title = label;
@@ -883,14 +890,15 @@
     const questionText = createElement("h1", "question-text", question.question);
     questionText.id = "question-text";
     const questionHeading = createElement("div", "question-heading");
-    questionHeading.append(questionText, createSpeechButton("Czytaj pytanie", question.question));
+    questionHeading.append(questionText, createSpeechButton("Czytaj pytanie", question.question, "question"));
 
     const answerHeading = createElement("div", "answers-heading");
     answerHeading.append(
       createElement("h2", "answers-title", "Odpowiedzi"),
       createSpeechButton(
         "Czytaj odpowiedzi",
-        question.answers.map((answer, index) => `${LETTERS[index]}. ${answer.text}`).join(". ")
+        question.answers.map((answer, index) => `${LETTERS[index]}. ${answer.text}`).join(". "),
+        "answers"
       )
     );
 
@@ -1012,7 +1020,7 @@
     const explanationHeading = createElement("div", "explanation-heading");
     explanationHeading.append(
       createElement("span", "feedback-label", "Wyjaśnienie"),
-      createSpeechButton("Czytaj wyjaśnienie", question.explanation || "Brak dodatkowego wyjaśnienia.")
+      createSpeechButton("Czytaj wyjaśnienie", question.explanation || "Brak dodatkowego wyjaśnienia.", "explanation")
     );
     explanation.append(
       explanationHeading,

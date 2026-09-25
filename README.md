@@ -66,4 +66,4 @@ W trybie testu ikony przy pytaniu, odpowiedziach i wyjaśnieniu uruchamiają odc
 
 ## Aktualizowanie wersji offline
 
-Plik `sw.js` zapisuje pliki aplikacji, zestawy pytań i materiały do nauki w pamięci podręcznej. Po zmianie zasobów umieszczonych w tablicy `APP_FILES` należy zwiększyć wersję w stałej `CACHE_NAME`, np. z `testy-z-ustaw-v22` na `testy-z-ustaw-v23`. Dzięki temu zainstalowane aplikacje usuną poprzedni cache i pobiorą aktualną wersję.
+Plik `sw.js` zapisuje pliki aplikacji, zestawy pytań i materiały do nauki w pamięci podręcznej. Po zmianie zasobów umieszczonych w tablicy `APP_FILES` należy zwiększyć wersję w stałej `CACHE_NAME`, np. z `testy-z-ustaw-v23` na `testy-z-ustaw-v24`. Dzięki temu zainstalowane aplikacje usuną poprzedni cache i pobiorą aktualną wersję.

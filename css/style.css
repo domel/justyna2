@@ -619,12 +619,23 @@ a:focus-visible {
   text-transform: uppercase;
 }
 
-.speech-button {
-  width: 2.75rem;
-  min-width: 2.75rem;
-  min-height: 42px;
-  padding: 0.55rem;
-  font-size: 0.9rem;
+.secondary-button.speech-button {
+  width: 2.25rem;
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+  padding: 0.4rem;
+  flex: 0 0 auto;
+}
+
+.speech-button svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
 }
 
 .speech-button:disabled {
