@@ -507,8 +507,45 @@ a:focus-visible {
 .topbar {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.35rem 0.75rem;
   min-height: 3rem;
   margin-bottom: 0.75rem;
+}
+
+.topbar-navigation {
+  display: flex;
+  gap: 0.4rem;
+  margin-left: auto;
+}
+
+.topbar-nav-button {
+  min-height: 40px;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 0.65rem;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.topbar-nav-button:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.topbar-nav-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.question-nav-button {
+  min-width: 40px;
+  padding-inline: 0.5rem;
+  font-size: 1.2rem;
+  line-height: 1;
 }
 
 .back-link {

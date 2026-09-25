@@ -288,15 +288,19 @@
     const indexIsValid = Number.isInteger(saved.currentQuestionIndex)
       && saved.currentQuestionIndex >= 0
       && saved.currentQuestionIndex < saved.questions.length;
-    const answersAreValid = Array.isArray(saved.answers)
+    const answersAreValid = questionsAreValid
+      && Array.isArray(saved.answers)
+      && new Set(saved.answers.map(answer => answer && answer.questionIndex)).size === saved.answers.length
       && saved.answers.every(answer => (
         answer
         && Number.isInteger(answer.questionIndex)
         && answer.questionIndex >= 0
-        && answer.questionIndex <= saved.currentQuestionIndex
+        && answer.questionIndex < saved.questions.length
         && Number.isInteger(answer.selectedIndex)
         && answer.selectedIndex >= 0
         && answer.selectedIndex < LETTERS.length
+        && answer.correctIndex === saved.questions[answer.questionIndex].answers.findIndex(option => option.isCorrect)
+        && answer.isCorrect === (answer.selectedIndex === answer.correctIndex)
         && typeof answer.isCorrect === "boolean"
       ));
     const answeredIsValid = typeof saved.answered === "boolean"
@@ -312,7 +316,8 @@
     }
 
     const currentAnswer = saved.answers.find(answer => answer.questionIndex === saved.currentQuestionIndex);
-    if (saved.answered !== Boolean(currentAnswer)) {
+    if (saved.answered !== Boolean(currentAnswer)
+      || (currentAnswer && saved.selectedAnswerIndex !== currentAnswer.selectedIndex)) {
       clearSavedSession(quizId);
       return false;
     }
@@ -332,6 +337,46 @@
   function getQuestionId(question) {
     const correctAnswer = question.answers.find(answer => answer.isCorrect);
     return JSON.stringify([question.question, correctAnswer ? correctAnswer.text : ""]);
+  }
+
+  function isQuestionAnswered(index) {
+    return state.answers.some(answer => answer.questionIndex === index);
+  }
+
+  function findUnansweredQuestion(direction) {
+    const answeredIndexes = new Set(state.answers.map(answer => answer.questionIndex));
+    if (direction < 0) {
+      for (let index = state.currentQuestionIndex - 1; index >= 0; index -= 1) {
+        if (!answeredIndexes.has(index)) return index;
+      }
+      return -1;
+    }
+
+    for (let index = state.currentQuestionIndex + 1; index < state.questions.length; index += 1) {
+      if (!answeredIndexes.has(index)) return index;
+    }
+    for (let index = 0; index < state.currentQuestionIndex; index += 1) {
+      if (!answeredIndexes.has(index)) return index;
+    }
+    return -1;
+  }
+
+  function openUnansweredQuestion(index) {
+    if (!Number.isInteger(index) || index < 0 || index >= state.questions.length || isQuestionAnswered(index)) return;
+    state.currentQuestionIndex = index;
+    state.answered = false;
+    state.selectedAnswerIndex = null;
+    saveCurrentSession();
+    renderQuestion();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function moveToUnansweredQuestion(direction) {
+    if (direction > 0 && state.answers.length === state.questions.length) {
+      showResults();
+      return;
+    }
+    openUnansweredQuestion(findUnansweredQuestion(direction));
   }
 
   function getQuizProgress(quizId) {
@@ -435,12 +480,14 @@
     if (state.questions.length === 0) {
       clearSavedSession(state.quizId);
       showMastered(QUIZZES[state.quizId]);
-    } else if (state.currentQuestionIndex >= state.questions.length) {
+    } else if (state.answers.length === state.questions.length) {
       showResults();
     } else {
-      saveCurrentSession();
-      renderQuestion();
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      const nextIndex = state.questions.findIndex((_, index) => index >= removedIndex && !isQuestionAnswered(index));
+      const firstUnanswered = nextIndex >= 0
+        ? nextIndex
+        : state.questions.findIndex((_, index) => !isQuestionAnswered(index));
+      openUnansweredQuestion(firstUnanswered);
     }
   }
 
@@ -671,7 +718,8 @@
   }
 
   function showStudyMaterial(materialId, { updateHistory = true } = {}) {
-    const material = STUDY_MATERIALS.find(item => item.id === materialId);
+    const materialIndex = STUDY_MATERIALS.findIndex(item => item.id === materialId);
+    const material = STUDY_MATERIALS[materialIndex];
     if (!material) {
       showStudyMaterials({ updateHistory });
       return;
@@ -688,7 +736,18 @@
     const back = createElement("button", "back-link", "← Wróć do materiałów");
     back.type = "button";
     back.addEventListener("click", () => showStudyMaterials());
-    topBar.append(back);
+    const navigation = createElement("nav", "topbar-navigation material-navigation");
+    navigation.setAttribute("aria-label", "Nawigacja po materiałach");
+    const previous = createElement("button", "topbar-nav-button", "← Cofnij");
+    previous.type = "button";
+    previous.disabled = materialIndex === 0;
+    previous.addEventListener("click", () => showStudyMaterial(STUDY_MATERIALS[materialIndex - 1].id));
+    const next = createElement("button", "topbar-nav-button", "Dalej →");
+    next.type = "button";
+    next.disabled = materialIndex === STUDY_MATERIALS.length - 1;
+    next.addEventListener("click", () => showStudyMaterial(STUDY_MATERIALS[materialIndex + 1].id));
+    navigation.append(previous, next);
+    topBar.append(back, navigation);
 
     const panel = createElement("article", "study-viewer");
     const header = createElement("header", "study-viewer-header");
@@ -858,7 +917,22 @@
 
     clearApp();
     app.className = "app-shell quiz-shell";
-    app.append(renderTopBar(quiz));
+    const topBar = renderTopBar(quiz);
+    const navigation = createElement("nav", "topbar-navigation question-navigation");
+    navigation.setAttribute("aria-label", "Nawigacja po pytaniach bez odpowiedzi");
+    const previous = createElement("button", "topbar-nav-button question-nav-button", "←");
+    previous.type = "button";
+    previous.id = "previous-question-button";
+    previous.setAttribute("aria-label", "Poprzednie pytanie bez odpowiedzi");
+    previous.title = "Poprzednie pytanie bez odpowiedzi";
+    previous.addEventListener("click", () => moveToUnansweredQuestion(-1));
+    const nextQuestionButton = createElement("button", "topbar-nav-button question-nav-button", "→");
+    nextQuestionButton.type = "button";
+    nextQuestionButton.id = "next-question-button";
+    nextQuestionButton.addEventListener("click", () => moveToUnansweredQuestion(1));
+    navigation.append(previous, nextQuestionButton);
+    topBar.append(navigation);
+    app.append(topBar);
 
     const panel = createElement("section", "quiz-panel");
     const header = createElement("header", "quiz-header");
@@ -870,7 +944,7 @@
       "question-counter",
       `Pytanie ${state.currentQuestionIndex + 1} z ${state.questions.length}`
     );
-    const percent = Math.round(((state.currentQuestionIndex + 1) / state.questions.length) * 100);
+    const percent = Math.round((state.answers.length / state.questions.length) * 100);
     const percentText = createElement("span", "progress-percent", `${percent}%`);
     progressRow.append(counter, percentText);
 
@@ -879,7 +953,7 @@
     progress.setAttribute("aria-valuemin", "0");
     progress.setAttribute("aria-valuemax", "100");
     progress.setAttribute("aria-valuenow", String(percent));
-    progress.setAttribute("aria-label", "Postęp testu");
+    progress.setAttribute("aria-label", "Udzielone odpowiedzi");
     const progressFill = createElement("div", "progress-fill");
     progressFill.style.width = `${percent}%`;
     progress.append(progressFill);
@@ -941,9 +1015,33 @@
     body.append(questionHeading, answerHeading, answers, feedback, actions);
     panel.append(header, body);
     app.append(panel);
+    updateQuestionNavigation();
 
     const firstAnswer = answers.querySelector(".answer-button");
     if (firstAnswer) firstAnswer.focus({ preventScroll: true });
+  }
+
+  function updateQuestionNavigation() {
+    const previous = document.getElementById("previous-question-button");
+    const next = document.getElementById("next-question-button");
+    if (!previous || !next) return;
+
+    const completed = state.answers.length === state.questions.length;
+    previous.disabled = findUnansweredQuestion(-1) < 0;
+    next.disabled = !completed && findUnansweredQuestion(1) < 0;
+    const nextLabel = completed ? "Zobacz wynik" : "Następne pytanie bez odpowiedzi";
+    next.setAttribute("aria-label", nextLabel);
+    next.title = nextLabel;
+  }
+
+  function updateQuestionProgress() {
+    const percent = Math.round((state.answers.length / state.questions.length) * 100);
+    const text = document.querySelector(".progress-percent");
+    const track = document.querySelector(".progress-track");
+    const fill = document.querySelector(".progress-fill");
+    if (text) text.textContent = `${percent}%`;
+    if (track) track.setAttribute("aria-valuenow", String(percent));
+    if (fill) fill.style.width = `${percent}%`;
   }
 
   function handleAnswer(index) {
@@ -1030,32 +1128,27 @@
 
     const next = document.getElementById("next-button");
     next.hidden = false;
-    if (state.currentQuestionIndex === state.questions.length - 1) {
+    if (state.answers.length === state.questions.length) {
       next.textContent = "Zobacz wynik →";
     }
+    updateQuestionProgress();
+    updateQuestionNavigation();
     next.focus({ preventScroll: true });
   }
 
   function nextQuestion() {
     if (!state.answered) return;
-
-    if (state.currentQuestionIndex >= state.questions.length - 1) {
-      showResults();
-      return;
-    }
-
-    state.currentQuestionIndex += 1;
-    state.answered = false;
-    state.selectedAnswerIndex = null;
-    saveCurrentSession();
-    renderQuestion();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    moveToUnansweredQuestion(1);
   }
 
   function showResults() {
     const quiz = QUIZZES[state.quizId];
     if (!quiz || state.questions.length === 0) {
       showHome();
+      return;
+    }
+    if (state.answers.length < state.questions.length) {
+      openUnansweredQuestion(state.questions.findIndex((_, index) => !isQuestionAnswered(index)));
       return;
     }
 
