@@ -21,7 +21,7 @@ Zainstalowana aplikacja ma własną ikonę i uruchamia się w osobnym oknie. Chr
 
 ## Materiały do nauki
 
-Sekcja „Nauka” zawiera 14 infografik i 5 dokumentów PDF z katalogu `materialy-do-nauki`. Galeria i pełne wersje obrazów są dostosowane do ekranów telefonów. Dokumenty PDF otwierają się przez link „Otwórz dokument PDF”. Wszystkie materiały są zapisywane przez Service Workera i po pierwszym pełnym uruchomieniu aplikacji można je otwierać bez internetu.
+Sekcja „Nauka” zawiera 14 infografik i 6 dokumentów PDF z katalogu `materialy-do-nauki`. Galeria i pełne wersje obrazów są dostosowane do ekranów telefonów. Dokumenty PDF otwierają się przez link „Otwórz dokument PDF”. Wszystkie materiały są zapisywane przez Service Workera i po pierwszym pełnym uruchomieniu aplikacji można je otwierać bez internetu.
 
 ## Uruchomienie lokalne
 
@@ -66,4 +66,4 @@ W trybie testu ikony przy pytaniu, odpowiedziach i wyjaśnieniu uruchamiają odc
 
 ## Aktualizowanie wersji offline
 
-Plik `sw.js` zapisuje pliki aplikacji, zestawy pytań i infografiki w pamięci podręcznej. Po zmianie zasobów umieszczonych w tablicy `APP_FILES` należy zwiększyć wersję w stałej `CACHE_NAME`, np. z `testy-z-ustaw-v21` na `testy-z-ustaw-v22`. Dzięki temu zainstalowane aplikacje usuną poprzedni cache i pobiorą aktualną wersję.
+Plik `sw.js` zapisuje pliki aplikacji, zestawy pytań i materiały do nauki w pamięci podręcznej. Po zmianie zasobów umieszczonych w tablicy `APP_FILES` należy zwiększyć wersję w stałej `CACHE_NAME`, np. z `testy-z-ustaw-v22` na `testy-z-ustaw-v23`. Dzięki temu zainstalowane aplikacje usuną poprzedni cache i pobiorą aktualną wersję.
